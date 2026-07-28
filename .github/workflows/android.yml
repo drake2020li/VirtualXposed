@@ -1,6 +1,19 @@
 name: Android CI
 
-on: [pull_request, push]
+on:
+  push:
+    branches: [ vxp ]
+  pull_request:
+    branches: [ vxp ]
+  workflow_dispatch:  # 手动触发
+    inputs:
+      branch:
+        description: '分支名称'
+        required: false
+        default: 'vxp'
+      tag:
+        description: 'Tag 名称（如果有）'
+        required: false
 
 jobs:
   build:
@@ -9,6 +22,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      with:
+        ref: ${{ github.event.inputs.branch || github.ref }}
     - name: Checkout submodules
       uses: srt32/git-actions@v0.0.3
       with:
